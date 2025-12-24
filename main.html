@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demi - Официальный пакетный менеджер LozzitaiOS и PulseOS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6fa5;
+            --primary-dark: #385d8a;
+            --secondary: #ff7e5f;
+            --dark: #2c3e50;
+            --light: #f9f9f9;
+            --gray: #eaeaea;
+            --success: #2ecc71;
+            --lozzita: #9b59b6;
+            --pulse: #e74c3c;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Шапка */
+        header {
+            background-color: var(--dark);
+            color: white;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo i {
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--secondary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Герой секция */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        .distro-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .distro-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .distro-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .lozzita-badge {
+            background-color: var(--lozzita);
+        }
+
+        .pulse-badge {
+            background-color: var(--pulse);
+        }
+
+        .distro-badge i {
+            font-size: 1.3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff6b4a;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 126, 95, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Особенности */
+        .features {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Дистрибутивы */
+        .distributions {
+            padding: 5rem 0;
+            background-color: var(--light);
+        }
+
+        .distro-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .distro-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .distro-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .distro-header {
+            padding: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .distro-header.lozzita {
+            background-color: var(--lozzita);
+        }
+
+        .distro-header.pulse {
+            background-color: var(--pulse);
+        }
+
+        .distro-header i {
+            font-size: 2rem;
+        }
+
+        .distro-body {
+            padding: 1.5rem;
+        }
+
+        .distro-body ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .distro-body li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .distro-body li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Установка */
+        .installation {
+            padding: 5rem 0;
+            background-color: white;
+        }
+
+        .code-block {
+            background-color: var(--dark);
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 2rem 0;
+            overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-block code {
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .code-block .comment {
+            color: #7fdbca;
+        }
+
+        .code-block .command {
+            color: #ffcc66;
+        }
+
+        .install-note {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Документация */
+        .documentation {
+            padding: 5rem 0;
+            background-color: var(--light);
+        }
+
+        .docs-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--gray);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .command-list {
+            list-style: none;
+        }
+
+        .command-list li {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .command-list strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Подвал */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links h3, .footer-social h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header-content nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark);
+                padding: 1rem;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .header-content nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .distro-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .distro-badge {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-box"></i>
+                <span>Demi</span>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#distributions">Дистрибутивы</a></li>
+                    <li><a href="#features">Возможности</a></li>
+                    <li><a href="#installation">Установка</a></li>
+                    <li><a href="#docs">Документация</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Герой секция -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Официальный пакетный менеджер LozzitaiOS и PulseOS</h1>
+            <p>Разработан специально для дистрибутивов на базе Ubuntu - LozzitaiOS и PulseOS. Эффективное управление пакетами с максимальной совместимостью и производительностью.</p>
+            
+            <div class="distro-badges">
+                <div class="distro-badge lozzita-badge">
+                    <i class="fab fa-ubuntu"></i>
+                    <span>LozzitaiOS</span>
+                </div>
+                <div class="distro-badge pulse-badge">
+                    <i class="fab fa-ubuntu"></i>
+                    <span>PulseOS</span>
+                </div>
+            </div>
+            
+            <div class="cta-buttons">
+                <a href="#installation" class="btn btn-primary">Установить Demi</a>
+                <a href="#docs" class="btn btn-secondary">Изучить документацию</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Дистрибутивы -->
+    <section class="distributions" id="distributions">
+        <div class="container">
+            <div class="section-title">
+                <h2>Оптимизирован для вашей системы</h2>
+                <p>Demi разработан с учетом особенностей LozzitaiOS и PulseOS для максимальной производительности и стабильности</p>
+            </div>
+            
+            <div class="distro-cards">
+                <div class="distro-card">
+                    <div class="distro-header lozzita">
+                        <i class="fab fa-ubuntu"></i>
+                        <h3>LozzitaiOS</h3>
+                    </div>
+                    <div class="distro-body">
+                        <p>LozzitaiOS - современный дистрибутив на базе Ubuntu с акцентом на производительность и минималистичный дизайн.</p>
+                        <ul>
+                            <li>Полная интеграция с Demi по умолчанию</li>
+                            <li>Оптимизированные репозитории пакетов</li>
+                            <li>Автоматические обновления безопасности</li>
+                            <li>Специальные метапакеты для LozzitaiOS</li>
+                            <li>Поддержка LTS-выпусков</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="distro-card">
+                    <div class="distro-header pulse">
+                        <i class="fab fa-ubuntu"></i>
+                        <h3>PulseOS</h3>
+                    </div>
+                    <div class="distro-body">
+                        <p>PulseOS - дистрибутив для разработчиков и энтузиастов, основанный на Ubuntu с расширенными инструментами разработки.</p>
+                        <ul>
+                            <li>Demi предустановлен в PulseOS</li>
+                            <li>Расширенная поддержка SDK и инструментов</li>
+                            <li>Тесная интеграция с облачными сервисами</li>
+                            <li>Улучшенная поддержка контейнеров</li>
+                            <li>Эксклюзивные репозитории PulseOS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Особенности -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Особенности Demi</h2>
+                <p>Специально разработанные возможности для LozzitaiOS и PulseOS</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Максимальная скорость</h3>
+                    <p>Оптимизирован для архитектуры LozzitaiOS и PulseOS. Параллельная загрузка и локальное кэширование ускоряют установку пакетов до 40%.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Безопасность</h3>
+                    <p>Интеграция с системой безопасности LozzitaiOS и PulseOS. Проверка цифровых подписей и изолированная установка для предотвращения конфликтов.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Полная совместимость</h3>
+                    <p>100% совместимость с репозиториями Ubuntu. Поддержка всех пакетов .deb и специальных метапакетов LozzitaiOS/PulseOS.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>Умные обновления</h3>
+                    <p>Автоматическое определение зависимостей и обновлений, специфичных для LozzitaiOS и PulseOS. Фоновая установка обновлений безопасности.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Установка -->
+    <section class="installation" id="installation">
+        <div class="container">
+            <div class="section-title">
+                <h2>Установка Demi</h2>
+                <p>Установите Demi на LozzitaiOS или PulseOS с помощью нескольких простых команд</p>
+            </div>
+            
+            <div class="docs-tabs">
+                <button class="tab-btn active" data-tab="lozzitaios">LozzitaiOS</button>
+                <button class="tab-btn" data-tab="pulseos">PulseOS</button>
+                <button class="tab-btn" data-tab="other">Другие ОС</button>
+            </div>
+            
+            <div id="lozzitaios" class="tab-content active">
+                <p>В LozzitaiOS Demi уже предустановлен. Для обновления до последней версии выполните:</p>
+                <div class="code-block">
+                    <code>
+                        <span class="comment"># Обновление списка пакетов</span><br>
+                        sudo demi update<br><br>
+                        
+                        <span class="comment"># Обновление самого Demi до последней версии</span><br>
+                        sudo demi install --self-update<br><br>
+                        
+                        <span class="comment"># Обновление всех пакетов системы</span><br>
+                        sudo demi upgrade
+                    </code>
+                </div>
+                
+                <div class="install-note">
+                    <p><strong>Примечание:</strong> В LozzitaiOS Demi полностью заменяет apt и является пакетным менеджером по умолчанию.</p>
+                </div>
+            </div>
+            
+            <div id="pulseos" class="tab-content">
+                <p>В PulseOS Demi также предустановлен. Для настройки и обновления выполните:</p>
+                <div class="code-block">
+                    <code>
+                        <span class="comment"># Настройка репозиториев PulseOS</span><br>
+                        sudo demi configure-pulseos<br><br>
+                        
+                        <span class="comment"># Обновление Demi и системы</span><br>
+                        sudo demi update && sudo demi upgrade<br><br>
+                        
+                        <span class="comment"># Установка дополнительных инструментов разработчика</span><br>
+                        sudo demi install pulseos-dev-tools
+                    </code>
+                </div>
+                
+                <div class="install-note">
+                    <p><strong>Примечание:</strong> Demi в PulseOS включает расширенные функции для разработчиков и облачной интеграции.</p>
+                </div>
+            </div>
+            
+            <div id="other" class="tab-content">
+                <p>Для других дистрибутивов на базе Ubuntu/Debian:</p>
+                <div class="code-block">
+                    <code>
+                        <span class="comment"># Добавление репозитория Demi</span><br>
+                        curl -fsSL https://demi.pkg/ubuntu/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/demi-archive-keyring.gpg<br><br>
+                        
+                        <span class="comment"># Добавление источника пакетов</span><br>
+                        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/demi-archive-keyring.gpg] https://demi.pkg/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/demi.list > /dev/null<br><br>
+                        
+                        <span class="comment"># Установка Demi</span><br>
+                        sudo apt update<br>
+                        sudo apt install demi
+                    </code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Документация -->
+    <section class="documentation" id="docs">
+        <div class="container">
+            <div class="section-title">
+                <h2>Основные команды Demi</h2>
+                <p>Команды, оптимизированные для LozzitaiOS и PulseOS</p>
+            </div>
+            
+            <div class="docs-tabs">
+                <button class="tab-btn active" data-tab="basic">Базовые команды</button>
+                <button class="tab-btn" data-tab="distro">Специфичные команды</button>
+                <button class="tab-btn" data-tab="advanced">Продвинутые</button>
+            </div>
+            
+            <div id="basic" class="tab-content active">
+                <ul class="command-list">
+                    <li>
+                        <strong>demi install &lt;пакет&gt;</strong>
+                        Установка пакета и его зависимостей (в LozzitaiOS/PulseOS автоматически выбирает оптимизированные версии)
+                    </li>
+                    <li>
+                        <strong>demi remove &lt;пакет&gt;</strong>
+                        Удаление пакета с сохранением конфигурационных файлов
+                    </li>
+                    <li>
+                        <strong>demi update</strong>
+                        Обновление списка доступных пакетов из репозиториев LozzitaiOS/PulseOS и Ubuntu
+                    </li>
+                    <li>
+                        <strong>demi upgrade</strong>
+                        Обновление всех установленных пакетов до последних версий
+                    </li>
+                    <li>
+                        <strong>demi search &lt;запрос&gt;</strong>
+                        Поиск пакетов в репозиториях LozzitaiOS/PulseOS
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="distro" class="tab-content">
+                <ul class="command-list">
+                    <li>
+                        <strong>demi lozzita-update</strong>
+                        Обновление только основных пакетов LozzitaiOS (без обновления приложений)
+                    </li>
+                    <li>
+                        <strong>demi pulseos-dev</strong>
+                        Установка полного набора инструментов разработчика PulseOS
+                    </li>
+                    <li>
+                        <strong>demi list-lozzita</strong>
+                        Показать все установленные пакеты LozzitaiOS
+                    </li>
+                    <li>
+                        <strong>demi list-pulseos</strong>
+                        Показать все установленные пакеты PulseOS
+                    </li>
+                    <li>
+                        <strong>demi configure-pulseos</strong>
+                        Настройка Demi для работы с репозиториями PulseOS
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="advanced" class="tab-content">
+                <ul class="command-list">
+                    <li>
+                        <strong>demi rollback</strong>
+                        Откатить последнее обновление пакетов (создает точку восстановления)
+                    </li>
+                    <li>
+                        <strong>demi snapshot create</strong>
+                        Создать снимок текущего состояния пакетов
+                    </li>
+                    <li>
+                        <strong>demi snapshot restore &lt;id&gt;</strong>
+                        Восстановить состояние пакетов из снимка
+                    </li>
+                    <li>
+                        <strong>demi clean</strong>
+                        Очистить кэш загруженных пакетов
+                    </li>
+                    <li>
+                        <strong>demi stats</strong>
+                        Статистика использования пакетного менеджера
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <i class="fas fa-box"></i>
+                        <span>Demi</span>
+                    </div>
+                    <p>Официальный пакетный менеджер для LozzitaiOS и PulseOS. Разработан специально для этих дистрибутивов на базе Ubuntu с максимальной оптимизацией и интеграцией.</p>
+                    <div class="distro-badges" style="margin-top: 1rem; justify-content: flex-start;">
+                        <div class="distro-badge lozzita-badge" style="padding: 0.5rem 1rem;">
+                            <i class="fab fa-ubuntu"></i>
+                            <span>LozzitaiOS</span>
+                        </div>
+                        <div class="distro-badge pulse-badge" style="padding: 0.5rem 1rem;">
+                            <i class="fab fa-ubuntu"></i>
+                            <span>PulseOS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Дистрибутивы</h3>
+                    <ul>
+                        <li><a href="#">LozzitaiOS</a></li>
+                        <li><a href="#">PulseOS</a></li>
+                        <li><a href="#installation">Установка Demi</a></li>
+                        <li><a href="#docs">Документация</a></li>
+                        <li><a href="#">Форум поддержки</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h3>Сообщество</h3>
+                    <p>Присоединяйтесь к сообществам LozzitaiOS и PulseOS</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Demi Package Manager. Разработан специально для LozzitaiOS и PulseOS. Основано на Ubuntu. Распространяется под лицензией GPL v3.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+        });
+        
+        // Закрытие меню при клике на ссылку
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+            });
+        });
+        
+        // Табы для установки
+        const installationTabBtns = document.querySelectorAll('.installation .tab-btn');
+        const installationTabContents = document.querySelectorAll('.installation .tab-content');
+        
+        installationTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Удаляем активный класс у всех кнопок и контента
+                installationTabBtns.forEach(b => b.classList.remove('active'));
+                installationTabContents.forEach(c => c.classList.remove('active'));
+                
+                // Добавляем активный класс текущей кнопке
+                btn.classList.add('active');
+                
+                // Показываем соответствующий контент
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Табы для документации
+        const docsTabBtns = document.querySelectorAll('.documentation .tab-btn');
+        const docsTabContents = document.querySelectorAll('.documentation .tab-content');
+        
+        docsTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Удаляем активный класс у всех кнопок и контента
+                docsTabBtns.forEach(b => b.classList.remove('active'));
+                docsTabContents.forEach(c => c.classList.remove('active'));
+                
+                // Добавляем активный класс текущей кнопке
+                btn.classList.add('active');
+                
+                // Показываем соответствующий контент
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Плавная прокрутка для якорных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Анимация появления элементов при прокрутке
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Наблюдаем за карточками
+        document.querySelectorAll('.feature-card, .distro-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s, transform 0.5s';
+            observer.observe(card);
+        });
+        
+        // Анимация для бейджей дистрибутивов
+        const badges = document.querySelectorAll('.distro-badge');
+        badges.forEach((badge, index) => {
+            badge.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
+</body>
+</html>
